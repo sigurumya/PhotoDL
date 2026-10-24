@@ -35,7 +35,7 @@
       }
 
       const fileName = requestedFile.split(/[\\/]/).pop();
-      if (fileName && /\.jpe?g$/i.test(fileName)) {
+      if (fileName && /\.JPG?g$/i.test(fileName)) {
         const link = document.createElement("a");
         link.href = `./${encodeURIComponent(fileName)}`;
         link.download = fileName;
