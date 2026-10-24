@@ -8,7 +8,42 @@
   </head>
   <body style="font-family: Kosugi, &quot;Hiragino Kaku Gothic ProN W3&quot;, sans-serif;">
     <div class="main">
-      <h1>TOP</h1>
+      <h1>写真DL</h1>
+      <p id="status">ダウンロードする写真を確認しています。</p>
     </div>
+    <script>
+      const status = document.getElementById("status");
+      const pathMatch = window.location.pathname.match(/index\.html\/(.+)$/i);
+      const query = window.location.search.slice(1);
+      const params = new URLSearchParams(query);
+      let requestedFile = params.get("file") || params.get("name");
+
+      if (!requestedFile && query) {
+        requestedFile = query.includes("=") ? "" : query;
+      }
+      if (!requestedFile && pathMatch) {
+        requestedFile = pathMatch[1];
+      }
+      if (!requestedFile && window.location.hash) {
+        requestedFile = window.location.hash.slice(1);
+      }
+
+      try {
+        requestedFile = requestedFile ? decodeURIComponent(requestedFile) : "";
+      } catch {
+        requestedFile = "";
+      }
+
+      const fileName = requestedFile.split(/[\\/]/).pop();
+      if (fileName && /\.jpe?g$/i.test(fileName)) {
+        const link = document.createElement("a");
+        link.href = `./${encodeURIComponent(fileName)}`;
+        link.download = fileName;
+        link.click();
+        status.textContent = `${fileName} のダウンロードを開始しました。`;
+      } else {
+        status.textContent = "URLにJPGファイル名を指定してください。";
+      }
+    </script>
   </body>
 </html>
