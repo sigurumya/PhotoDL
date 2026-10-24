@@ -1,15 +1,31 @@
 <html lang="ja"><head>
     <meta charset="utf-8">
-    <title>写真DL</title>
+    <title>写真DLサイト</title>
     <meta name="viewport" content="width=device-width, initial-scale=0.5">
     <meta name="description" content="fotoDL">
     <base href="">
     <link rel="stylesheet" href="index.css">
   </head>
-  <body style="font-family: Kosugi, &quot;Hiragino Kaku Gothic ProN W3&quot;, sans-serif;">
-    <div class="main">
-      <h1>写真DL</h1>
-      <p id="status">ダウンロードする写真を確認しています。</p>
+  <body>
+    <div class="page-shell">
+      <main class="hero-card" aria-live="polite">
+        <div class="eyebrow">Google Drive • JPG Downloader</div>
+        <h1>写真DLサイト</h1>
+        <p class="subtitle">Google Drive に保存された写真を、すばやく安全にダウンロードできます。</p>
+
+        <div class="status-panel">
+          <span class="status-dot" aria-hidden="true"></span>
+          <p id="status">ダウンロードする写真を確認しています。</p>
+        </div>
+
+        <div class="feature-list" aria-label="サービスの特徴">
+          <span>高速</span>
+          <span>安全</span>
+          <span>簡単</span>
+        </div>
+      </main>
+
+      <p class="legal-note">本サイトは、Google Driveに保存された写真を簡単にダウンロードできるサービスのみ提供しています。本サイトに写真データは存在しません。</p>
     </div>
     <script>
       const status = document.getElementById("status");
