@@ -16,10 +16,11 @@
       const pathMatch = window.location.pathname.match(/index\.html\/(.+)$/i);
       const query = window.location.search.slice(1);
       const params = new URLSearchParams(query);
-      let requestedFile = params.get("file") || params.get("name");
+      let requestedFile = params.get("url") || params.get("link") || params.get("file") || params.get("name");
 
       if (!requestedFile && query) {
-        requestedFile = query.includes("=") ? "" : query;
+        const driveUrlStart = query.search(/https?:\/\/(?:drive|docs)\.google\.com\//i);
+        requestedFile = driveUrlStart >= 0 ? query.slice(driveUrlStart) : query.includes("=") ? "" : query;
       }
       if (!requestedFile && pathMatch) {
         requestedFile = pathMatch[1];
@@ -34,15 +35,31 @@
         requestedFile = "";
       }
 
-      const fileName = requestedFile.split(/[\\/]/).pop();
-      if (fileName && /\.JPG?g$/i.test(fileName)) {
+      let driveFileId = "";
+      try {
+        const driveUrl = new URL(requestedFile);
+        if (/^(drive|docs)\.google\.com$/i.test(driveUrl.hostname)) {
+          driveFileId = driveUrl.pathname.match(/\/file\/d\/([^/]+)/)?.[1]
+            || driveUrl.pathname.match(/\/document\/d\/([^/]+)/)?.[1]
+            || driveUrl.searchParams.get("id")
+            || "";
+        }
+      } catch {
+        driveFileId = "";
+      }
+
+      const fileName = requestedFile.split(/[\\/?#]/).pop();
+      if (driveFileId) {
+        status.textContent = "Google Driveからダウンロードしています。";
+        window.location.replace(`https://drive.google.com/uc?export=download&id=${encodeURIComponent(driveFileId)}`);
+      } else if (fileName && /\.jpe?g$/i.test(fileName)) {
         const link = document.createElement("a");
         link.href = `./${encodeURIComponent(fileName)}`;
         link.download = fileName;
         link.click();
         status.textContent = `${fileName} のダウンロードを開始しました。`;
       } else {
-        status.textContent = "URLにJPGファイル名を指定してください。";
+        status.textContent = "URLにJPGファイル名またはGoogle Driveの共有リンクを指定してください。";
       }
     </script>
   </body>
